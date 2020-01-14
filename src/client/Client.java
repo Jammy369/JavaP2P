@@ -8,42 +8,54 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class Client {
-
-	public static void main(String[] args) {
+	
+	private String saddress;
+	private int numport;
+	
+	public Client() {
 		
-		System.out.println("Saisir un message");
+		this.saddress = "localhost";
+		this.numport = 2222;
 		
-		Scanner sc = new Scanner(System.in);
+	}
+	
+	public Client(String ad, int por) {
 		
-		String message = sc.nextLine();
-		message += "\r\n";
+		this.saddress = ad;
+		this.numport = por;
 		
-		
+	}
+	
+	public void envoyer(Socket sk, String texte) {
 		
 		try {
 			
-			Socket socketEmission = new Socket("localhost", 2222);
-			BufferedReader in = new BufferedReader(new InputStreamReader(socketEmission.getInputStream()));
-			OutputStreamWriter out = new OutputStreamWriter(socketEmission.getOutputStream());
-			out.write(message);
+			OutputStreamWriter out = new OutputStreamWriter(sk.getOutputStream());
+			
+			out.write(texte);
 			out.flush();
-			in.readLine();
-			
-			socketEmission.close();
-			
-		} catch (UnknownHostException e) {
-			
-			
 			
 		} catch (IOException e) {
 			
+			System.out.println("Erreur lors d el'envoi du message");
+			
+		}					
+		
+	}
+	
+	public String recevoir(Socket sk) {
+		
+		String mess = new String();
+		
+		try {
+			
+			BufferedReader in = new BufferedReader(new InputStreamReader(sk.getInputStream()));
+			mess = in.readLine();
+			
+		} catch (IOException e) {
 			
 		}
-		
-		
-		
-		
-		
+		return mess;
 		
 	}
 	
